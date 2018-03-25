@@ -3,7 +3,7 @@ const Product = require('../models/products.js')
 module.exports = {
   // Add a new product
   async addProduct (req, res) {
-    const product = new Product(req.body)
+    let product = new Product(req.body)
     try {
       let newProduct = await product.save()
       res.status(201).send({

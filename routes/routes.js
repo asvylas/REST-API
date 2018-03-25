@@ -1,5 +1,6 @@
 const userController = require('../controllers/userController.js')
 const productController = require('../controllers/productController.js')
+const orderController = require('../controllers/orderController.js')
 module.exports = (app) => {
   // User controllers
   app.post('/users', 
@@ -26,5 +27,12 @@ module.exports = (app) => {
   )
   app.delete('/products/:_id',
     productController.deleteProduct
+  )
+  // Order controllers
+  app.post('/orders',
+    orderController.createOrder
+  )
+  app.get('/orders',
+    orderController.listOrders
   )
 }
