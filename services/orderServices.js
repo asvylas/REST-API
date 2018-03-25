@@ -4,26 +4,28 @@ const User = require('../models/users')
 
 module.exports = {
   async checkOrderValidity(order) {
+    let product = await Product.findById(order.productID, (error) => {
+      if (error) {
+        throw error = `No product with ID: ${order.productID} found.`
+      }
+    })
+    let user = await User.findById(order.userID, (error) => {
+      if (error) {
+        throw error = `No user with ID: ${order.userID} found.`
+      }
+    })
     if (typeof order.quantity !== "number") {
       throw error = "Order quantity has to be a number."
     }
-    let product = await Product.findById(order.productID)
-    let user = await User.findById(order.userID)
-    if (product && user) {
-      if (product.price * order.quantity < user.money) {
-        if (product.quantity > order.quantity) {
-          let processFlag = await this.processOrder(order, product, user)
-          if(processFlag) {
-            return true
-          }
-        } else {
-          throw error = "There is not enough product in stock for this order."
-        }
-      } else {
-        throw error = "User has insufficient funds for this order."
-      }
-    } else {
-      throw error = "Either no user or product was found with specified ID."
+    if(product.price * order.quantity > user.money) {
+      throw error = "User has insufficient funds for this order."
+    }
+    if (product.quantity < order.quantity) {
+      throw error = "There is not enough product in stock for this order."
+    }
+    let processFlag = await this.processOrder(order, product, user)
+    if(processFlag) {
+      return true
     }
   },
   async processOrder (order, product, user) {

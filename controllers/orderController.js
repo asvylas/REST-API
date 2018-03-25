@@ -4,6 +4,7 @@ const User = require('../models/users')
 const orderServices = require('../services/orderServices.js')
 
 module.exports = {
+  // Create order
   async createOrder (req, res) {
     let order = new Order(req.body)
     try {
@@ -17,7 +18,7 @@ module.exports = {
       }
     } catch (error) {
       res.status(400).send({
-        error: error.error || error
+        error: error
       })
     }
   },
